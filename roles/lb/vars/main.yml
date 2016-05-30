@@ -1,0 +1,5 @@
+mode: http
+front_listen_port: 80
+back_listen_port: 80
+app_name: johnsonbosslb
+balance: roundrobin

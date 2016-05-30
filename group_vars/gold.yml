@@ -1,0 +1,26 @@
+lb_backend_nodes:
+  - node: gold-web1
+    ip: "{{ hostvars['gold-web1']['ansible_eth1']['ipv4']['address'] }}"
+  - node: gold-web2
+    ip: "{{ hostvars['gold-web2']['ansible_eth1']['ipv4']['address'] }}"
+  - node: gold-web3
+    ip: "{{ hostvars['gold-web3']['ansible_eth1']['ipv4']['address'] }}"
+  - node: gold-web4
+    ip: "{{ hostvars['gold-web4']['ansible_eth1']['ipv4']['address'] }}"
+  - node: gold-web5
+    ip: "{{ hostvars['gold-web5']['ansible_eth1']['ipv4']['address'] }}"
+
+master_db: 
+    name: gold-db1
+    ip: "{{ hostvars['gold-db1']['ansible_eth1']['ipv4']['address'] }}"
+    id: 1
+
+slave_db: 
+    name: gold-db2
+    ip: "{{ hostvars['gold-db2']['ansible_eth1']['ipv4']['address'] }}"
+    id: 2
+
+mysql_port: 3306
+mysql_db_name: myapp
+mysql_app_user: vm2
+mysql_app_pass: vm2

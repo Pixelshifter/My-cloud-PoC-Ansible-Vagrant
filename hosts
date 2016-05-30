@@ -1,0 +1,50 @@
+[bronze:children]
+bronzeweb 
+bronzelb
+bronzedb
+
+[bronzelb]
+br-lb1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2200
+
+[bronzeweb]
+br-web1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2201
+br-web2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2202
+
+[bronzedb]
+br-db1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2203
+
+[silver:children]
+silverweb 
+silverlb
+silverdb
+
+[silverlb]
+slv-lb1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222
+
+[silverweb]
+slv-web1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2200
+slv-web2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2201
+slv-web3 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2202
+
+[silverdb]
+slv-db1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2203
+slv-db2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2204
+
+[gold:children]
+goldweb
+goldlb
+golddb
+
+[goldlb]
+gold-lb1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222
+
+[goldweb]
+gold-web1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2200
+gold-web2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2201
+gold-web3 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2202
+gold-web4 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2203
+gold-web5 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2204
+
+[golddb]
+gold-db1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2205
+gold-db2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2206

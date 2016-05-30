@@ -1,0 +1,23 @@
+---
+lb_backend_nodes:
+  - node: slv-web1
+    ip: "{{ hostvars['slv-web1']['ansible_eth1']['ipv4']['address'] }}"
+  - node: slv-web2
+    ip: "{{ hostvars['slv-web2']['ansible_eth1']['ipv4']['address'] }}"
+  - node: slv-web3
+    ip: "{{ hostvars['slv-web3']['ansible_eth1']['ipv4']['address'] }}"
+
+master_db: 
+    name: slv-db1
+    ip: "{{ hostvars['slv-db1']['ansible_eth1']['ipv4']['address'] }}"
+    id: 1
+
+slave_db: 
+    name: slv-db2
+    ip: "{{ hostvars['slv-db2']['ansible_eth1']['ipv4']['address'] }}"
+    id: 2
+
+mysql_port: 3306
+mysql_db_name: myapp
+mysql_app_user: vm2
+mysql_app_pass: vm2

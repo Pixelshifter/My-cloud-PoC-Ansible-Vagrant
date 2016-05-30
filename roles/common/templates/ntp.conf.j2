@@ -1,0 +1,7 @@
+server  {{ ntp_server1 }}
+server  {{ ntp_server2 }}
+fudge   127.127.1.0 stratum 10
+
+# Drift file.
+
+driftfile /etc/ntp/drift

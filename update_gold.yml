@@ -1,0 +1,23 @@
+- hosts: gold
+  sudo: true
+  remote_user: vagrant
+  serial: 1
+
+  pre_tasks:
+  
+  - name: disable the server in haproxy
+    haproxy: 'state=disabled backend=myapplb host={{ inventory_hostname }} socket=/var/lib/haproxy/stats'
+    delegate_to: gold-lb1
+
+  roles:
+  - common
+  - web
+
+  post_tasks:
+  
+  - name: wait for webserver to come up
+    wait_for: 'host={{ inventory_hostname }} port=80 state=started timeout=80'
+
+  - name: enable the server in haproxy
+    haproxy: 'state=enabled backend=myapplb host={{ inventory_hostname }} socket=/var/lib/haproxy/stats'
+    delegate_to: gold-lb1

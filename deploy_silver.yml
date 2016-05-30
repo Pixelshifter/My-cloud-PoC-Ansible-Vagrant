@@ -1,0 +1,25 @@
+- hosts: silver
+  sudo: true
+  remote_user: vagrant
+  vars_files:
+    - group_vars/silver.yml
+  roles:
+  - common
+
+- hosts: silverlb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - lb
+
+- hosts: silverweb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - web
+
+- hosts: silverdb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - db

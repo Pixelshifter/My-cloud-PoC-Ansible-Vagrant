@@ -1,0 +1,66 @@
+- name: pre-set MySQL root password
+  debconf: name='mysql-server' question='mysql-server/root_password' vtype='password' value='{{ mysql_root_db_pass | quote }}'
+
+- name: pre-set confirm MySQL root password
+  debconf: name='mysql-server' question='mysql-server/root_password_again' vtype='password' value='{{ mysql_root_db_pass | quote }}'
+
+- name: copy .my.cnf file with root password credentials
+  template: src=secret.cnf.j2 dest=~/.my.cnf mode=0600
+
+- name: Install MySQL and other dependencies
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=installed
+  with_items:
+    - mysql-server
+    - libmysqlclient-dev
+    - python-mysqldb
+
+- name: Copy MySQL configuration file
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
+  
+- name: Restart service MySQL
+  service: name=mysql state=restarted enabled=yes
+
+- name: ensure anonymous users are not in the database
+  mysql_user: user='' host={{ item }} login_password={{ mysql_root_db_pass }} login_user=root state=absent 
+  with_items:
+   - localhost
+   - "{{ ansible_hostname }}"
+
+- name: remove the test database
+  mysql_db: name=test login_password={{ mysql_root_db_pass }} login_user=root state=absent
+
+- name: Create the {{ mysql_db_name }} database
+  mysql_db: name={{ mysql_db_name }} login_user=root login_password={{ mysql_root_db_pass }} state=present
+  when: inventory_hostname == master_db.name
+
+- name: Create Application DB User and assign privilege only to the {{ mysql_db_name }} db
+  mysql_user: name={{ mysql_app_user }} password={{ mysql_app_pass }} priv="{{ mysql_db_name }}.*:ALL" host="%" state=present
+
+- name: Create the replication users
+  mysql_user: name={{ mysql_repl_user }} host="%" password={{ mysql_repl_pass }} priv="*.*:REPLICATION SLAVE" state=present
+  when: slave_db is defined and inventory_hostname == master_db.name
+
+- name: Check if slave is already configured for replication
+  mysql_replication: mode=getslave
+  ignore_errors: true
+  register: slave_status
+  when: slave_db is defined and inventory_hostname == slave_db.name
+
+- name: Get the current master server's replication status
+  mysql_replication: mode=getmaster
+  delegate_to: "{{ master_db.ip }}"
+  ignore_errors: true
+  register: repl_stat
+  when: slave_db is defined and inventory_hostname == slave_db.name
+
+- name: Reset slave command
+  mysql_replication: mode=stopslave
+  when: slave_status|failed and slave_db is defined and inventory_hostname == slave_db.name
+
+- name: Change the master in slave to start the replication
+  mysql_replication: mode=changemaster master_host={{ master_db.ip }} master_user={{ mysql_repl_user }} master_password={{ mysql_repl_pass }} master_log_file='mysql-bin.000001' master_log_pos=107
+  when: slave_status|failed and slave_db is defined and inventory_hostname == slave_db.name
+
+- name: Startslave command
+  mysql_replication: mode=startslave
+  when: slave_status|failed and slave_db is defined and inventory_hostname == slave_db.name

@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>Welcome to Ansible Johnny!</title>
+	</head>
+	<body>
+		<h1>nginx, configured by ansible for Johnny</h1>
+		<p>Als je dit ziet, heeft Ansible Nginx succesvol geïnstalleerd.</p>
+		<p>{{ ansible_nodename }} {{ ansible_eth1.ipv4.address }}</p>
+	</body>
+</html>
+
+<?php 
+
+define("DATABASE", "{{ mysql_db_name }}");
+
+define("DBPORTNUMBER", "{{ mysql_port }}");
+
+define("DBPASSWORD", "{{ mysql_app_pass }}");
+
+define("DBHOSTNAME", "{{ master_db.ip }}");
+
+define("DBUSERNAME", "{{ mysql_app_user }}");
+
+function query() {
+
+    $sql = func_get_arg(0);
+
+    $parameters = array_slice(func_get_args(), 1);
+
+    static $handle;
+    if (!isset($handle)) {
+
+        $handle = new PDO("mysql:host=" . DBHOSTNAME . ";port=" . DBPORTNUMBER . ";dbname=" . DATABASE, DBUSERNAME, DBPASSWORD);
+    }
+
+    $statement = $handle->prepare($sql);
+
+    if ($statement === false) {
+        echo ("Er is iets mis met de SQL statement.");
+        exit;
+    }
+
+    $results = $statement->execute($parameters);
+
+    if ($results != false) {
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        return false;
+    }
+}
+
+$result = query("SELECT * FROM test");
+
+if ($result == false) {
+	echo "DB connection failed.";
+} else {
+	echo $result[0]['datum'];
+	echo $result[0]['opmerking'];
+}
+
+?>

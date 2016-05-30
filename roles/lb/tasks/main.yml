@@ -1,0 +1,12 @@
+- name: Install HAproxy
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
+  with_items:
+    - haproxy
+    - socat
+
+- name: Set HAproxy defaults
+  shell: echo 'ENABLED=1' > /etc/default/haproxy
+
+- name: Copy configuration file
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg 
+  notify: restart haproxy

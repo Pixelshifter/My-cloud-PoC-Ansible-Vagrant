@@ -1,0 +1,25 @@
+- hosts: bronze
+  sudo: true
+  remote_user: vagrant
+  vars_files:
+    - group_vars/bronze.yml
+  roles:
+  - common
+
+- hosts: bronzelb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - lb
+
+- hosts: bronzeweb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - web
+
+- hosts: bronzedb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - db

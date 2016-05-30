@@ -1,0 +1,25 @@
+- hosts: gold
+  sudo: true
+  remote_user: vagrant
+  vars_files:
+    - group_vars/gold.yml
+  roles:
+  - common
+
+- hosts: goldlb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - lb
+
+- hosts: goldweb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - web
+
+- hosts: golddb
+  sudo: true
+  remote_user: vagrant
+  roles:
+  - db

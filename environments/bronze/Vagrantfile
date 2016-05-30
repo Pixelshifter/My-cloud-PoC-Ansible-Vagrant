@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+	# use the same key for each machine 
+	config.ssh.insert_key = false
+
+	# create load balancer
+	config.vm.define :"br-lb1" do |lb|
+		lb.vm.box = "ubuntu/trusty64"
+		lb.vm.hostname = "br-lb1"
+		lb.vm.network :private_network, ip: "10.50.15.11"
+        	lb.vm.network "forwarded_port", guest: 80, host: 8350
+        	lb.vm.provider "virtualbox" do |vb|
+            		vb.memory = "256"
+        	end
+      	end
+
+	# create web servers
+    	(1..2).each do |i|
+        	config.vm.define "br-web#{i}" do |web|
+       	    		web.vm.box = "ubuntu/trusty64"
+      	    		web.vm.hostname = "br-web#{i}"
+      	    		web.vm.network :private_network, ip: "10.50.15.3#{i}"
+            		web.vm.provider "virtualbox" do |vb|
+     		        	vb.memory = "256"
+        	  	end
+        	end
+	   end
+
+	#create db server
+  config.vm.define :"br-db1" do |db|
+  			db.vm.box = "ubuntu/trusty64"
+  		    	db.vm.hostname = "br-db1"
+  		    	db.vm.network :private_network, ip: "10.50.15.41"
+          		db.vm.provider "virtualbox" do |vb|
+                		vb.memory = "1024"
+          		end
+        end
+end

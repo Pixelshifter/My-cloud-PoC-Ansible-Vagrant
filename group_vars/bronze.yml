@@ -1,0 +1,16 @@
+---
+lb_backend_nodes:
+  - node: br-web1
+    ip: "{{ hostvars['br-web1']['ansible_eth1']['ipv4']['address'] }}"
+  - node: br-web2
+    ip: "{{ hostvars['br-web2']['ansible_eth1']['ipv4']['address'] }}"
+
+master_db: 
+    name: br-db1
+    ip: "{{ hostvars['br-db1']['ansible_eth1']['ipv4']['address'] }}"
+    id: 1
+
+mysql_port: 3306
+mysql_db_name: myapp
+mysql_app_user: vm2
+mysql_app_pass: vm2
