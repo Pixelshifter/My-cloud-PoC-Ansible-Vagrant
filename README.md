@@ -13,8 +13,8 @@ silver
 	- 3 web-servers;
 	- 2 database-servers.
 	
-gold
-  - 1 load-balancer;
+gold	
+	- 1 load-balancer;
 	- 5 web-servers;
 	- 2 database-servers.
 
