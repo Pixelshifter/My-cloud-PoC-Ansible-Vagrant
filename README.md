@@ -35,4 +35,3 @@ deploy initiates 'vagrant up' and runs a deploy_* playbook.
 update initiates a rolling update for the web-servers (one at a time).
 
 shutdown initiates 'vagrant suspend'.
-
